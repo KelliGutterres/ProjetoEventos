@@ -1,14 +1,17 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../config/database');
+const authenticate = require('../middleware/auth');
 
 /**
  * @swagger
  * /api/presencas:
  *   post:
  *     summary: Confirmar presença de um usuário
- *     description: Registra a presença de um usuário baseado no ID da inscrição. A presença só é confirmada se a inscrição existir.
+ *     description: Registra a presença de um usuário baseado no ID da inscrição. A presença só é confirmada se a inscrição existir. Requer autenticação.
  *     tags: [Presenças]
+ *     security:
+ *       - bearerAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -41,6 +44,16 @@ const pool = require('../config/database');
  *                 confirmada: true
  *                 data_presenca: "2024-01-15T14:30:00.000Z"
  *                 created_at: "2024-01-15T14:30:00.000Z"
+ *       401:
+ *         description: Não autorizado - Token de autenticação inválido ou não fornecido
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/PresencaErrorResponse'
+ *             example:
+ *               success: false
+ *               message: "Token de autenticação não fornecido. Adicione o header Authorization com o token."
+ *               presenca_confirmada: false
  *       404:
  *         description: Inscrição não encontrada
  *         content:
@@ -82,7 +95,7 @@ const pool = require('../config/database');
  *               message: "Erro interno do servidor ao confirmar presença"
  *               presenca_confirmada: false
  */
-router.post('/', async (req, res) => {
+router.post('/', authenticate, async (req, res) => {
   const { inscricao_id } = req.body;
 
   // Validação do campo obrigatório

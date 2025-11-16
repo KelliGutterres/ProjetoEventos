@@ -137,10 +137,14 @@ router.post('/', async (req, res) => {
     // Remover senha do objeto antes de retornar
     const { senha: _, ...usuarioSemSenha } = usuario;
 
+    // Token fixo para autenticação
+    const TOKEN = '12345';
+
     res.status(200).json({
       success: true,
       message: 'Usuário autenticado com sucesso',
       authorized: true,
+      token: TOKEN,
       data: usuarioSemSenha
     });
 

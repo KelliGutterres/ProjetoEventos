@@ -27,6 +27,14 @@ const options = {
       }
     ],
     components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'Token',
+          description: 'Token de autenticação fixo: 12345'
+        }
+      },
       schemas: {
         PresencaRequest: {
           type: 'object',
@@ -145,6 +153,11 @@ const options = {
             authorized: {
               type: 'boolean',
               example: true
+            },
+            token: {
+              type: 'string',
+              description: 'Token de autenticação para usar nas requisições protegidas',
+              example: '12345'
             },
             data: {
               $ref: '#/components/schemas/UsuarioResponse'
