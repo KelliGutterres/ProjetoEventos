@@ -189,11 +189,11 @@ router.post('/', async (req, res) => {
     const saltRounds = 10;
     const senhaHash = await bcrypt.hash(senha, saltRounds);
 
-    // Inserir novo usuário
+    // Inserir novo usuário (admin será false por padrão)
     const result = await pool.query(
       `INSERT INTO usuarios (nome, email, cpf, data_nascimento, senha, cidade) 
        VALUES ($1, $2, $3, $4, $5, $6) 
-       RETURNING id, nome, email, cpf, data_nascimento, cidade, created_at`,
+       RETURNING id, nome, email, cpf, data_nascimento, cidade, admin, created_at`,
       [nome, email, cpfLimpo, data_nascimento, senhaHash, cidade || null]
     );
 

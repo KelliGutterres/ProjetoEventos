@@ -38,10 +38,12 @@ const pool = require('../config/database');
  *               success: true
  *               message: "Usuário autenticado com sucesso"
  *               authorized: true
+ *               token: "12345"
  *               data:
  *                 id: 1
  *                 nome: "João Silva"
  *                 email: "joao.silva@email.com"
+ *                 admin: true
  *       401:
  *         description: Credenciais inválidas - E-mail ou senha incorretos
  *         content:
@@ -105,9 +107,9 @@ router.post('/', async (req, res) => {
   }
 
   try {
-    // Buscar usuário pelo email
+    // Buscar usuário pelo email (incluindo campo admin)
     const result = await pool.query(
-      'SELECT id, nome, email, cpf, data_nascimento, senha FROM usuarios WHERE email = $1',
+      'SELECT id, nome, email, cpf, data_nascimento, senha, admin FROM usuarios WHERE email = $1',
       [email]
     );
 
@@ -136,6 +138,9 @@ router.post('/', async (req, res) => {
     // Autenticação bem-sucedida
     // Remover senha do objeto antes de retornar
     const { senha: _, ...usuarioSemSenha } = usuario;
+
+    // Garantir que admin seja sempre booleano (false por padrão se null/undefined)
+    usuarioSemSenha.admin = Boolean(usuario.admin);
 
     // Token fixo para autenticação
     const TOKEN = '12345';

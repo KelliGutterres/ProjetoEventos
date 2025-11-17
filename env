@@ -1,8 +1,9 @@
 # Configurações do Banco de Dados PostgreSQL
-DB_USER=postgres
+DB_USER=laravel_db
 DB_HOST=127.0.0.1
 DB_NAME=laravel_db
-DB_PASSWORD=postgres
+DB_USER=laravel_user
+DB_PASSWORD=senha123
 DB_PORT=5432
 
 # Configurações do Servidor
@@ -10,4 +11,3 @@ PORT=3000
 
 # Ambiente (development, production)
 NODE_ENV=development
-
